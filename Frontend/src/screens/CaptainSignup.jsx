@@ -66,33 +66,33 @@ function CaptainSignup() {
   return (
     <div className="w-full h-dvh flex flex-col justify-between p-4 pt-6">
       <div>
-        <Heading title={"Captain Sign Up🚕"} />
+        <Heading title={"Registrarse como conductor 🚕"} />
         <form onSubmit={handleSubmit(signupCaptain)}>
           {!showVehiclePanel && (
             <>
               <div className="flex gap-4 -mb-2">
                 <Input
-                  label={"First name"}
+                  label={"Nombre"}
                   name={"firstname"}
                   register={register}
                   error={errors.firstname}
                 />
                 <Input
-                  label={"Last name"}
+                  label={"Apellido"}
                   name={"lastname"}
                   register={register}
                   error={errors.lastname}
                 />
               </div>
               <Input
-                label={"Phone Number"}
+                label={"Número de teléfono"}
                 type={"number"}
                 name={"phone"}
                 register={register}
                 error={errors.phone}
               />
               <Input
-                label={"Email"}
+                label={"Correo"}
                 type={"email"}
                 name={"email"}
                 register={register}
@@ -100,7 +100,7 @@ function CaptainSignup() {
               />
 
               <Input
-                label={"Password"}
+                label={"Contraseña"}
                 type={"password"}
                 name={"password"}
                 register={register}
@@ -117,7 +117,7 @@ function CaptainSignup() {
                   setShowVehiclePanel(true);
                 }}
               >
-                Next <ChevronRight strokeWidth={2.5} />
+                Siguiente <ChevronRight strokeWidth={2.5} />
               </div>
             </>
           )}
@@ -131,13 +131,13 @@ function CaptainSignup() {
               />
               <div className="flex gap-4 -my-2">
                 <Input
-                  label={"Vehicle colour"}
+                  label={"Color del vehículo"}
                   name={"color"}
                   register={register}
                   error={errors.color}
                 />
                 <Input
-                  label={"Vehicle capacity"}
+                  label={"Capacidad del vehículo"}
                   type={"number"}
                   name={"capacity"}
                   register={register}
@@ -145,15 +145,15 @@ function CaptainSignup() {
                 />
               </div>
               <Input
-                label={"Vehicle number"}
+                label={"Placa del vehículo"}
                 name={"number"}
                 register={register}
                 error={errors.number}
               />
               <Input
-                label={"Vehicle type"}
+                label={"Tipo de vehículo"}
                 type={"select"}
-                options={["Car", "Bike", "Auto"]}
+                options={["Auto", "Moto", "Tuk Tuk"]}
                 name={"type"}
                 register={register}
                 error={errors.type}
@@ -164,14 +164,14 @@ function CaptainSignup() {
                   {responseError}
                 </p>
               )}
-              <Button title={"Sign Up"} loading={loading} type="submit" />
+              <Button title={"Registrarse"} loading={loading} type="submit" />
             </>
           )}
         </form>
         <p className="text-sm font-normal text-center mt-4">
-          Already have an account?{" "}
+          ¿Ya tiene cuenta?{" "}
           <Link to={"/captain/login"} className="font-semibold">
-            Login
+            Iniciar sesión
           </Link>
         </p>
       </div>
@@ -179,14 +179,11 @@ function CaptainSignup() {
         <Button
           type={"link"}
           path={"/signup"}
-          title={"Sign Up as User"}
+          title={"Registrarse como usuario"}
           classes={"bg-green-500"}
         />
         <p className="text-xs font-normal text-center self-end mt-6">
-          This site is protected by reCAPTCHA and the Google{" "}
-          <span className="font-semibold underline">Privacy Policy</span> and{" "}
-          <span className="font-semibold underline">Terms of Service</span>{" "}
-          apply.
+          La búsqueda de ubicación utiliza datos de OpenStreetMap y servicios de enrutamiento.
         </p>
       </div>
     </div>

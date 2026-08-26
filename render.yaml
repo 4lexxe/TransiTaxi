@@ -1,0 +1,48 @@
+services:
+  # Backend Node.js Web Service
+  - type: web
+    name: quickride-backend
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: cd Backend && npm install
+    startCommand: cd Backend && npm start
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: ENVIRONMENT
+        value: production
+      - key: MONGODB_PROD_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CLIENT_URL
+        sync: false
+      - key: NOMINATIM_BASE_URL
+        value: https://nominatim.openstreetmap.org
+      - key: OSRM_BASE_URL
+        value: https://router.project-osrm.org
+      - key: MAP_CACHE_TTL_MS
+        value: "300000"
+      - key: MAP_CACHE_MAX_ENTRIES
+        value: "500"
+      - key: ALLOW_PUBLIC_MAP_PROVIDERS
+        value: "true"
+
+  # Frontend Static Site
+  - type: web
+    name: quickride-frontend
+    env: static
+    buildCommand: cd Frontend && npm install && npm run build
+    staticPublishPath: ./Frontend/dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_SERVER_URL
+        sync: false
+      - key: VITE_ENVIRONMENT
+        value: production
+      - key: VITE_RIDE_TIMEOUT
+        value: "90000"

@@ -64,9 +64,9 @@ function NewRide({
             </div>
 
             <div className="text-right">
-              <h1 className="font-semibold text-lg">₹ {rideData?.fare}</h1>
+              <h1 className="font-semibold text-lg">$ {rideData?.fare?.toFixed(0)}</h1>
               <p className="text-xs text-gray-500 ">
-                {(Number(rideData?.distance?.toFixed(2)) / 1000)?.toFixed(1)} Km
+                {(Number(rideData?.distance?.toFixed(2)) / 1000)?.toFixed(1)} km
               </p>
             </div>
           </div>
@@ -143,12 +143,12 @@ function NewRide({
               </div>
             </div>
 
-            {/* Fare */}
+              {/* Tarifa */}
             <div className="flex items-center gap-3 border-t-2 py-2 px-2">
               <CreditCard size={18} />
               <div>
                 <h1 className="text-lg font-semibold leading-6">
-                  ₹ {rideData.fare}
+                  $ {rideData?.fare?.toFixed(0)}
                 </h1>
                 <p className="text-xs text-gray-800 ">Cash</p>
               </div>

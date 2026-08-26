@@ -1,13 +1,14 @@
 import { useContext, useEffect, useState } from "react";
-import map from "/map.png";
 import axios from "axios";
 import { useCaptain } from "../contexts/CaptainContext";
 import { Phone, User } from "lucide-react";
 import { SocketDataContext } from "../contexts/SocketContext";
-import { NewRide, Sidebar } from "../components";
+import { LiveMap, NewRide, Sidebar } from "../components";
 import Console from "../utils/console";
 import { useAlert } from "../hooks/useAlert";
 import { Alert } from "../components";
+
+const map = "/map.png";
 
 const defaultRideData = {
   user: {
@@ -37,13 +38,11 @@ function CaptainHomeScreen() {
   const [loading, setLoading] = useState(false);
   const { alert, showAlert, hideAlert } = useAlert();
 
-  const [riderLocation, setRiderLocation] = useState({
-    ltd: null,
-    lng: null,
-  });
-  const [mapLocation, setMapLocation] = useState(
-    `https://www.google.com/maps?q=${riderLocation.ltd},${riderLocation.lng}&output=embed`
-  );
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [pickupPoint, setPickupPoint] = useState(null);
+  const [destinationPoint, setDestinationPoint] = useState(null);
+  const [routeStartPoint, setRouteStartPoint] = useState(null);
+  const [routeEndPoint, setRouteEndPoint] = useState(null);
   const [earnings, setEarnings] = useState({
     total: 0,
     today: 0,
@@ -63,6 +62,19 @@ function CaptainHomeScreen() {
     JSON.parse(localStorage.getItem("messages")) || []
   );
   const [error, setError] = useState("");
+
+  const getCoordinates = async (address) => {
+    const response = await axios.get(
+      `${import.meta.env.VITE_SERVER_URL}/map/get-coordinates?address=${encodeURIComponent(
+        address
+      )}`
+    );
+
+    return {
+      lat: Number(response.data.ltd),
+      lng: Number(response.data.lng),
+    };
+  };
 
   // Panels
   const [showCaptainDetailsPanel, setShowCaptainDetailsPanel] = useState(true);
@@ -88,9 +100,10 @@ function CaptainHomeScreen() {
         );
         setLoading(false);
         setShowBtn("otp");
-        setMapLocation(
-          `https://www.google.com/maps?q=${riderLocation.ltd},${riderLocation.lng} to ${newRide.pickup}&output=embed`
-        );
+        if (currentLocation && pickupPoint) {
+          setRouteStartPoint(currentLocation);
+          setRouteEndPoint(pickupPoint);
+        }
         Console.log(response);
       }
     } catch (error) {
@@ -115,9 +128,10 @@ function CaptainHomeScreen() {
             },
           }
         );
-        setMapLocation(
-          `https://www.google.com/maps?q=${riderLocation.ltd},${riderLocation.lng} to ${newRide.destination}&output=embed`
-        );
+        if (currentLocation && destinationPoint) {
+          setRouteStartPoint(currentLocation);
+          setRouteEndPoint(destinationPoint);
+        }
         setShowBtn("end-ride");
         setLoading(false);
         Console.log(response);
@@ -144,9 +158,8 @@ function CaptainHomeScreen() {
             },
           }
         );
-        setMapLocation(
-          `https://www.google.com/maps?q=${riderLocation.ltd},${riderLocation.lng}&output=embed`
-        );
+        setRouteStartPoint(null);
+        setRouteEndPoint(null);
         setShowBtn("accept");
         setLoading(false);
         setShowCaptainDetailsPanel(true);
@@ -165,15 +178,10 @@ function CaptainHomeScreen() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          // Console.log(position);
-          setRiderLocation({
-            ltd: position.coords.latitude,
+          setCurrentLocation({
+            lat: position.coords.latitude,
             lng: position.coords.longitude,
           });
-
-          setMapLocation(
-            `https://www.google.com/maps?q=${position.coords.latitude},${position.coords.longitude}&output=embed`
-          );
           socket.emit("update-location-captain", {
             userId: captain._id,
             location: {
@@ -208,6 +216,10 @@ function CaptainHomeScreen() {
     setShowCaptainDetailsPanel(true);
     setShowNewRidePanel(false);
     setNewRide(defaultRideData);
+    setPickupPoint(null);
+    setDestinationPoint(null);
+    setRouteStartPoint(null);
+    setRouteEndPoint(null);
     localStorage.removeItem("rideDetails");
     localStorage.removeItem("showPanel");
   }
@@ -228,6 +240,15 @@ function CaptainHomeScreen() {
       setShowBtn("accept");
       setNewRide(data);
       setShowNewRidePanel(true);
+
+      Promise.all([getCoordinates(data.pickup), getCoordinates(data.destination)])
+        .then(([pickupCoords, destinationCoords]) => {
+          setPickupPoint(pickupCoords);
+          setDestinationPoint(destinationCoords);
+        })
+        .catch((error) => {
+          Console.error(error);
+        });
     });
 
     socket.on("ride-cancelled", (data) => {
@@ -316,12 +337,6 @@ function CaptainHomeScreen() {
   }, [captain]);
 
   useEffect(() => {
-    if (mapLocation.ltd && mapLocation.lng) {
-      Console.log(mapLocation);
-    }
-  }, [mapLocation]);
-
-  useEffect(() => {
     if (socket.id) Console.log("socket id:", socket.id);
   }, [socket.id]);
 
@@ -338,13 +353,15 @@ function CaptainHomeScreen() {
         type={alert.type}
       />
       <Sidebar />
-      <iframe
-        src={mapLocation}
-        className="map w-full h-[80vh]"
-        allowFullScreen={true}
-        loading="lazy"
-        referrerPolicy="no-referrer-when-downgrade"
-      ></iframe>
+      <LiveMap
+        className="map w-full h-[80vh] z-0"
+        currentLocation={currentLocation}
+        pickupPoint={pickupPoint}
+        destinationPoint={destinationPoint}
+        routeStart={routeStartPoint}
+        routeEnd={routeEndPoint}
+        isRideAccepted={showBtn !== "accept"}
+      />
 
       {showCaptainDetailsPanel && (
         <div className="absolute bottom-0 flex flex-col justify-start p-4 gap-2 rounded-t-lg bg-white h-fit w-full">

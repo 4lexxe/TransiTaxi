@@ -24,6 +24,7 @@ function CaptainProtectedWrapper({ children }) {
         headers: {
           token: token,
         },
+        withCredentials: true,
       })
       .then((response) => {
         if (response.status === 200) {

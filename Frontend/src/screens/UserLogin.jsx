@@ -17,6 +17,24 @@ function UserLogin() {
 
   const navigation = useNavigate();
 
+  const getErrorMessage = (error) => {
+    const responseData = error?.response?.data;
+
+    if (Array.isArray(responseData) && responseData[0]?.msg) {
+      return responseData[0].msg;
+    }
+
+    if (Array.isArray(responseData?.errors) && responseData.errors[0]?.msg) {
+      return responseData.errors[0].msg;
+    }
+
+    if (responseData?.message) {
+      return responseData.message;
+    }
+
+    return "No se pudo iniciar sesión";
+  };
+
   const loginUser = async (data) => {
     if (data.email.trim() !== "" && data.password.trim() !== "") {
       try {
@@ -33,7 +51,7 @@ function UserLogin() {
         }));
         navigation("/home");
       } catch (error) {
-        setResponseError(error.response.data.message);
+        setResponseError(getErrorMessage(error));
         Console.log(error);
       } finally {
         setLoading(false);
@@ -49,17 +67,17 @@ function UserLogin() {
   return (
     <div className="w-full h-dvh flex flex-col justify-between p-4 pt-6">
       <div>
-        <Heading title={"User Login🧑🏻"} />
+        <Heading title={"Iniciar sesión 👤"} />
         <form onSubmit={handleSubmit(loginUser)}>
           <Input
-            label={"Email"}
+            label={"Correo"}
             type={"email"}
             name={"email"}
             register={register}
             error={errors.email}
           />
           <Input
-            label={"Password"}
+            label={"Contraseña"}
             type={"password"}
             name={"password"}
             register={register}
@@ -71,14 +89,14 @@ function UserLogin() {
             </p>
           )}
           <Link to="/user/forgot-password" className="text-sm mb-2 inline-block">
-            Forgot Password?
+            ¿Olvidó su contraseña?
           </Link>
-          <Button title={"Login"} loading={loading} type="submit" />
+          <Button title={"Iniciar sesión"} loading={loading} type="submit" />
         </form>
         <p className="text-sm font-normal text-center mt-4">
-          Don't have an account?{" "}
+          ¿Aún no tiene cuenta?{" "}
           <Link to={"/signup"} className="font-semibold">
-            Sign up
+            Registrarse
           </Link>
         </p>
 
@@ -87,14 +105,11 @@ function UserLogin() {
         <Button
           type={"link"}
           path={"/captain/login"}
-          title={"Login as Captain"}
+          title={"Iniciar sesión como conductor"}
           classes={"bg-orange-500"}
         />
         <p className="text-xs font-normal text-center self-end mt-6">
-          This site is protected by reCAPTCHA and the Google{" "}
-          <span className="font-semibold underline">Privacy Policy</span> and{" "}
-          <span className="font-semibold underline">Terms of Service</span>{" "}
-          apply.
+          La búsqueda de ubicación utiliza datos de OpenStreetMap y servicios de enrutamiento.
         </p>
       </div>
     </div>

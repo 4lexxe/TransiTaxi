@@ -3,24 +3,24 @@ import { ChevronDown } from "lucide-react";
 const vehicles = [
   {
     id: 1,
-    name: "Car",
-    description: "Affordable, compact rides",
+    name: "Auto",
+    description: "Viajes compactos y económicos",
     type: "car",
     image: "car.png",
     price: 193.8,
   },
   {
     id: 2,
-    name: "Bike",
-    description: "Affordable, motorcycle rides",
+    name: "Moto",
+    description: "Viajes en moto económicos",
     type: "bike",
     image: "bike.webp",
     price: 254.7,
   },
   {
     id: 3,
-    name: "Auto",
-    description: "Affordable, auto rides",
+    name: "Tuk Tuk",
+    description: "Viajes en tuk tuk económicos",
     type: "auto",
     image: "auto.webp",
     price: 200.0,
@@ -92,7 +92,7 @@ const Vehicle = ({
         <p className="text-xs text-gray-800 ">{vehicle.description}</p>
       </div>
       <div className="h-12 w-24">
-        <h3 className="font-semibold">₹ {fare[vehicle.type]}</h3>
+        <h3 className="font-semibold">$ {fare[vehicle.type]?.toFixed(0)}</h3>
       </div>
     </div>
   );

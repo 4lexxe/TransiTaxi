@@ -31,8 +31,8 @@ QuickRide is a feature-rich project built using modern web technologies. It repl
 
 | **Category**       | **Technologies / Tools**                                              |
 | ------------------ | --------------------------------------------------------------------- |
-| **Frontend**       | HTML, CSS, React.js, Tailwind CSS, Google Maps                        |
-| **Backend**        | Node.js, Express.js, MongoDB, Socket IO, NodeMailer, Google Maps APIs |
+| **Frontend**       | HTML, CSS, React.js, Tailwind CSS, OpenStreetMap (Leaflet)            |
+| **Backend**        | Node.js, Express.js, MongoDB, Socket IO, NodeMailer, Nominatim, OSRM  |
 | **Authentication** | JWT (JSON Web Token), bcrypt                                          |
 | **Deployment**     | Vercel, Render                                                        |
 | **Dev Tools**      | Postman, npm, Nodemon, ESLint, Custom Logger                          |
@@ -166,14 +166,18 @@ VITE_RIDE_TIMEOUT=90000
 
 ```env
 PORT=3000
-RELOAD_INTERVAL = 10
+RELOAD_INTERVAL=10
 SERVER_URL=http://localhost:3000
 CLIENT_URL=http://localhost:5173
 ENVIRONMENT=development
 MONGODB_PROD_URL=<your-mongodb-atlas-url>
 MONGODB_DEV_URL=mongodb://127.0.0.1:27017/quickRide
 JWT_SECRET=<your-jwt-secret>
-GOOGLE_MAPS_API=<your-google-maps-api-key>
+NOMINATIM_BASE_URL=https://nominatim.openstreetmap.org
+OSRM_BASE_URL=https://router.project-osrm.org
+MAP_CACHE_TTL_MS=300000
+MAP_CACHE_MAX_ENTRIES=500
+ALLOW_PUBLIC_MAP_PROVIDERS=false
 MAIL_USER=<your-gmail-id>
 MAIL_PASS=<your-app-password>
 ```

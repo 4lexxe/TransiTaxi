@@ -4,6 +4,10 @@ const mapService = require("../services/map.service");
 const { sendMessageToSocketId } = require("../socket");
 const rideModel = require("../models/ride.model");
 const userModel = require("../models/user.model");
+const { sendMail } = require("../services/mail.service");
+const { fillTemplate } = require("../templates/mail.template");
+
+const APP_BRAND = "RayoRemis";
 
 module.exports.chatDetails = async (req, res) => {
   const { id } = req.params;
@@ -70,7 +74,7 @@ module.exports.createRide = async (req, res) => {
         console.log("Pickup Coordinates", pickupCoordinates);
 
         const captainsInRadius = await mapService.getCaptainsInTheRadius(
-          pickupCoordinates.ltd,
+          pickupCoordinates.lat,
           pickupCoordinates.lng,
           4,
           vehicleType
@@ -117,6 +121,17 @@ module.exports.getFare = async (req, res) => {
     );
     return res.status(200).json({ fare, distanceTime });
   } catch (err) {
+    if (
+      err.message?.includes("Unable to fetch coordinates") ||
+      err.message?.includes("No routes found") ||
+      err.message?.includes("Origin and destination are required")
+    ) {
+      return res.status(400).json({
+        message:
+          "No pudimos ubicar una de las direcciones. Prueba con una direccion mas especifica.",
+      });
+    }
+
     return res.status(500).json({ message: err.message });
   }
 };
@@ -226,6 +241,68 @@ module.exports.endRide = async (req, res) => {
       event: "ride-ended",
       data: ride,
     });
+
+    return res.status(200).json(ride);
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
+
+module.exports.endRideByUser = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { rideId } = req.body;
+
+  try {
+    const ride = await rideModel
+      .findOne({ _id: rideId, user: req.user._id })
+      .populate("user")
+      .populate("captain");
+
+    if (!ride) {
+      return res.status(404).json({ message: "Ride not found" });
+    }
+
+    if (["completed", "cancelled"].includes(ride.status)) {
+      return res.status(200).json(ride);
+    }
+
+    ride.status = "completed";
+    await ride.save();
+
+    if (ride.captain?.socketId) {
+      sendMessageToSocketId(ride.captain.socketId, {
+        event: "ride-ended",
+        data: ride,
+      });
+    }
+
+    if (ride.user?.socketId) {
+      sendMessageToSocketId(ride.user.socketId, {
+        event: "ride-ended",
+        data: ride,
+      });
+    }
+
+    if (ride.user?.email) {
+      const mailHtml = fillTemplate({
+        title: "Viaje finalizado",
+        name: ride.user.fullname?.firstname,
+        message: `Tu viaje en ${APP_BRAND} finalizo correctamente. Esperamos que hayas tenido un excelente recorrido.`,
+        cta_link: process.env.CLIENT_URL,
+        cta_text: "Volver a la app",
+        note: "Gracias por viajar con nosotros.",
+      });
+
+      await sendMail(
+        ride.user.email,
+        `${APP_BRAND} - Viaje finalizado`,
+        mailHtml
+      );
+    }
 
     return res.status(200).json(ride);
   } catch (err) {

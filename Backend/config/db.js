@@ -1,19 +1,21 @@
 const mongoose = require("mongoose");
 
-let MONGO_DB = {
-  production: { url: process.env.MONGODB_PROD_URL, type: "Atlas" },
-  development: { url: process.env.MONGODB_DEV_URL, type: "Compass" },
-};
+let environment = process.env.ENVIRONMENT || "development";
 
-let environment = process.env.ENVIRONMENT;
+let mongoUrl =
+  process.env.MONGODB_URI ||
+  (environment === "production"
+    ? process.env.MONGODB_PROD_URL
+    : process.env.MONGODB_DEV_URL) ||
+  "mongodb://127.0.0.1:27017/quickRide";
 
 mongoose
-  .connect(MONGO_DB[environment].url)
+  .connect(mongoUrl)
   .then(() => {
-    console.log("Connected to Mongo DB", MONGO_DB[environment].type);
+    console.log(`Connected to Mongo DB (${environment})`);
   })
-  .catch(() => {
-    console.log("Failed to connect to MongoDB");
+  .catch((err) => {
+    console.error("Failed to connect to MongoDB:", err.message);
   });
 
 module.exports = mongoose.connection;

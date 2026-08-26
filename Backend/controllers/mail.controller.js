@@ -8,6 +8,8 @@ let { fillTemplate } = require("../templates/mail.template");
 const captainModel = require("../models/captain.model");
 const userModel = require("../models/user.model");
 
+const APP_BRAND = "RayoRemis";
+
 module.exports.sendVerificationEmail = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -48,15 +50,15 @@ module.exports.sendVerificationEmail = asyncHandler(async (req, res) => {
     let mailHtml = fillTemplate({
       title: "Email Verification Required",
       name: user.fullname.firstname,
-      message: "Thank you for signing up with QuickRide! To complete your registration and activate your account, please verify your email address by clicking the button below.",
+      message: `Thank you for signing up with ${APP_BRAND}! To complete your registration and activate your account, please verify your email address by clicking the button below.`,
       cta_link: verification_link,
       cta_text: "Verify Email",
-      note: "For your security, this verification link is valid for only <strong>15 minutes</strong>.  If the link expires, you can request a new one from the login page. <br/>If you did not create a QuickRide account, please disregard this email.",
+      note: `For your security, this verification link is valid for only <strong>15 minutes</strong>.  If the link expires, you can request a new one from the login page. <br/>If you did not create a ${APP_BRAND} account, please disregard this email.`,
     });
 
-    const result = await sendMail(
+    await sendMail(
       user.email,
-      "QuickRide - Email Verification",
+      `${APP_BRAND} - Email Verification`,
       mailHtml
     );
 
@@ -103,13 +105,20 @@ module.exports.forgotPassword = asyncHandler(async (req, res) => {
   let mailHtml = fillTemplate({
     title: "Reset Password",
     name: user.fullname.firstname,
-    message: "We received a request to reset the password associated with your QuickRide account. If you made this request, please click the button below to proceed.",
+    message: `We received a request to reset the password associated with your ${APP_BRAND} account. If you made this request, please click the button below to proceed.`,
     cta_link: resetLink,
     cta_text: "Reset Password",
     note: "If you didn’t request a password reset, you can safely ignore this email. Your current password will remain unchanged. <br/>This verification link is valid for <strong>15 minutes</strong> only.",
   });
 
-  await sendMail(user.email, "QuickRide - Reset Password", mailHtml);
+  try {
+    await sendMail(user.email, `${APP_BRAND} - Reset Password`, mailHtml);
+  } catch (error) {
+    console.error("Error sending reset password email:", error);
+    return res
+      .status(500)
+      .json({ message: "Failed to send reset password email" });
+  }
 
   res.status(200).json({ message: "Reset password email sent successfully" });
 });

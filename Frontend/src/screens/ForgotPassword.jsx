@@ -5,10 +5,11 @@ import { useForm } from "react-hook-form";
 import Console from '../utils/console';
 import axios from 'axios';
 import useCooldownTimer from '../hooks/useCooldownTimer';
-import mailImg from "/mail.png";
 import { ArrowLeft } from 'lucide-react';
 import { useAlert } from '../hooks/useAlert';
 import { Alert } from '../components';
+
+const mailImg = "/mail.png";
 
 const allowedParams = ["user", "captain"];
 

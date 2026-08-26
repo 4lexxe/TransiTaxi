@@ -21,6 +21,10 @@ function RideDetails({
   rideCreated,
   confirmedRideData,
 }) {
+  const isRideAccepted = Boolean(
+    confirmedRideData?.captain?.location?.coordinates?.length === 2
+  );
+
   return (
     <>
       <div
@@ -31,7 +35,7 @@ function RideDetails({
         <div>
           {rideCreated && !confirmedRideData && (
             <>
-              <h1 className="text-center">Looking for nearby drivers</h1>
+              <h1 className="text-center">Buscando conductores cercanos</h1>
               <div className="overflow-y-hidden py-2 pb-2">
                 <div className="h-1 rounded-full bg-blue-500 animate-ping"></div>
               </div>
@@ -39,7 +43,7 @@ function RideDetails({
           )}
           <div
             className={`flex ${
-              confirmedRideData ? " justify-between " : " justify-center "
+              isRideAccepted ? " justify-between " : " justify-center "
             } pt-2 pb-4`}
           >
             <div>
@@ -49,11 +53,11 @@ function RideDetails({
                     ? "/car.png"
                     : `/${selectedVehicle}.webp`
                 }
-                className={`${confirmedRideData ? " h-20" : " h-12 "}`}
+                className={`${isRideAccepted ? " h-20" : " h-12 "}`}
               />
             </div>
 
-            {confirmedRideData?._id && (
+            {isRideAccepted && (
               <div className="leading-4 text-right">
                 <h1 className="text-sm ">
                   {confirmedRideData?.captain?.fullname?.firstname}{" "}
@@ -73,12 +77,12 @@ function RideDetails({
               </div>
             )}
           </div>
-          {confirmedRideData?._id && (
+          {isRideAccepted && (
             <div className="flex gap-2 mb-2">
               <Button
                 type={"link"}
                 path={`/user/chat/${confirmedRideData?._id}`}
-                title={"Send a message..."}
+                title={"Enviar mensaje..."}
                 icon={<SendHorizontal strokeWidth={1.5} size={18} />}
                 classes={"bg-zinc-100 font-medium text-sm text-zinc-950"}
               />
@@ -143,26 +147,26 @@ function RideDetails({
               </div>
             </div>
 
-            {/* Fare */}
+            {/* Tarifa */}
             <div className="flex items-center gap-3 border-t-2 py-2 px-2">
               <CreditCard size={18} />
               <div>
                 <h1 className="text-lg font-semibold leading-6">
-                  ₹ {fare[selectedVehicle]}
+                  $ {fare[selectedVehicle]?.toFixed(0)}
                 </h1>
-                <p className="text-xs text-gray-800 ">Cash</p>
+                <p className="text-xs text-gray-800 ">Efectivo</p>
               </div>
             </div>
           </div>
-          {rideCreated || confirmedRideData ? (
+          {rideCreated || isRideAccepted ? (
             <Button
-              title={"Cancel Ride"}
+              title={"Cancelar viaje"}
               loading={loading}
               classes={"bg-red-600 "}
               fun={cancelRide}
             />
           ) : (
-            <Button title={"Confirm Ride"} fun={createRide} loading={loading} />
+            <Button title={"Confirmar viaje"} fun={createRide} loading={loading} />
           )}
         </div>
       </div>

@@ -10,6 +10,13 @@ router.get('/get-coordinates',
     mapController.getCoordinates
 );
 
+router.get('/reverse-geocode',
+    query('lat').isFloat(),
+    query('lng').isFloat(),
+    authMiddleware.authUser,
+    mapController.getAddressFromCoordinates
+);
+
 router.get('/get-distance-time',
     query('origin').isString().isLength({ min: 3 }),
     query('destination').isString().isLength({ min: 3 }),
@@ -18,7 +25,11 @@ router.get('/get-distance-time',
 )
 
 router.get('/get-suggestions',
-    query('input').isString().isLength({ min: 3 }),
+    query('input').isString().isLength({ min: 2 }),
+    query('lat').optional().isFloat(),
+    query('lng').optional().isFloat(),
+    query('province').optional().isString(),
+    query('countryCode').optional().isString().isLength({ min: 2, max: 2 }),
     authMiddleware.authUser,
     mapController.getAutoCompleteSuggestions
 )

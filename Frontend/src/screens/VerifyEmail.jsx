@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import Console from "../utils/console";
-import mailImg from "/mail.png";
 import { Button, Spinner } from "../components";
+
+const mailImg = "/mail.png";
 
 const VerifyEmail = () => {
   const [searchParams] = useSearchParams();

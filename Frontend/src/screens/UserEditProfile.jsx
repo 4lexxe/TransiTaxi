@@ -81,10 +81,10 @@ function UserEditProfile() {
             className="mt-[5px] cursor-pointer"
             onClick={() => navigation(-1)}
           />
-          <Heading title={"Edit Profile"} />
+          <Heading title={"Editar perfil"} />
         </div>
         <Input
-          label={"Email"}
+          label={"Correo"}
           type={"email"}
           name={"email"}
           register={register}
@@ -94,21 +94,21 @@ function UserEditProfile() {
         />
         <form onSubmit={handleSubmit(updateUserProfile)}>
           <Input
-            label={"First name"}
+            label={"Nombre"}
             name={"firstname"}
             register={register}
             error={errors.firstname}
             defaultValue={user.fullname.firstname}
           />
           <Input
-            label={"Last name"}
+            label={"Apellido"}
             name={"lastname"}
             register={register}
             error={errors.lastname}
             defaultValue={user.fullname.lastname}
           />
           <Input
-            label={"Phone Number"}
+            label={"Número de teléfono"}
             type={"number"}
             name={"phone"}
             register={register}
@@ -121,7 +121,7 @@ function UserEditProfile() {
             </p>
           )}
           <Button
-            title={"Update Profile"}
+            title={"Actualizar perfil"}
             loading={loading}
             type="submit"
             classes={"mt-4"}

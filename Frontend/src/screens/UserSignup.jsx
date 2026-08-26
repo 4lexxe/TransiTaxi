@@ -16,6 +16,25 @@ function UserSignup() {
   } = useForm();
 
   const navigation = useNavigate();
+
+  const getErrorMessage = (error) => {
+    const responseData = error?.response?.data;
+
+    if (Array.isArray(responseData) && responseData[0]?.msg) {
+      return responseData[0].msg;
+    }
+
+    if (Array.isArray(responseData?.errors) && responseData.errors[0]?.msg) {
+      return responseData.errors[0].msg;
+    }
+
+    if (responseData?.message) {
+      return responseData.message;
+    }
+
+    return "No se pudo completar el registro";
+  };
+
   const signupUser = async (data) => {
     const userData = {
       fullname: {
@@ -37,7 +56,7 @@ function UserSignup() {
       localStorage.setItem("token", response.data.token);
       navigation("/home");
     } catch (error) {
-      setResponseError(error.response.data[0].msg);
+      setResponseError(getErrorMessage(error));
       Console.log(error);
     } finally {
       setLoading(false);
@@ -52,38 +71,38 @@ function UserSignup() {
   return (
     <div className="w-full h-dvh flex flex-col justify-between p-4 pt-6">
       <div>
-        <Heading title={"User Sign Up🧑🏻"} />
+        <Heading title={"Registrarse 👤"} />
         <form onSubmit={handleSubmit(signupUser)}>
           <div className="flex gap-4 -mb-2">
             <Input
-              label={"First name"}
+              label={"Nombre"}
               name={"firstname"}
               register={register}
               error={errors.firstname}
             />
             <Input
-              label={"Last name"}
+              label={"Apellido"}
               name={"lastname"}
               register={register}
               error={errors.lastname}
             />
           </div>
           <Input
-            label={"Phone Number"}
+            label={"Número de teléfono"}
             type={"number"}
             name={"phone"}
             register={register}
             error={errors.phone}
           />
           <Input
-            label={"Email"}
+            label={"Correo"}
             type={"email"}
             name={"email"}
             register={register}
             error={errors.email}
           />
           <Input
-            label={"Password"}
+            label={"Contraseña"}
             type={"password"}
             name={"password"}
             register={register}
@@ -94,12 +113,12 @@ function UserSignup() {
               {responseError}
             </p>
           )}
-          <Button title={"Sign Up"} loading={loading} type="submit" />
+          <Button title={"Registrarse"} loading={loading} type="submit" />
         </form>
         <p className="text-sm font-normal text-center mt-4">
-          Already have an account?{" "}
+          ¿Ya tiene cuenta?{" "}
           <Link to={"/login"} className="font-semibold">
-            Login
+            Iniciar sesión
           </Link>
         </p>
       </div>
@@ -107,14 +126,11 @@ function UserSignup() {
         <Button
           type={"link"}
           path={"/captain/signup"}
-          title={"Sign Up as Captain"}
+          title={"Registrarse como conductor"}
           classes={"bg-orange-500"}
         />
         <p className="text-xs font-normal text-center self-end mt-6">
-          This site is protected by reCAPTCHA and the Google{" "}
-          <span className="font-semibold underline">Privacy Policy</span> and{" "}
-          <span className="font-semibold underline">Terms of Service</span>{" "}
-          apply.
+          La búsqueda de ubicación utiliza datos de OpenStreetMap y servicios de enrutamiento.
         </p>
       </div>
     </div>

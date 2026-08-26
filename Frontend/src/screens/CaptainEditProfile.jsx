@@ -73,10 +73,10 @@ function CaptainEditProfile() {
             className="mt-[5px] cursor-pointer"
             onClick={() => navigation(-1)}
           />
-          <Heading title={"Edit Profile"} />
+          <Heading title={"Editar perfil"} />
         </div>
         <Input
-          label={"Email"}
+          label={"Correo"}
           type={"email"}
           name={"email"}
           register={register}
@@ -86,7 +86,7 @@ function CaptainEditProfile() {
         />
         <form onSubmit={handleSubmit(updateUserProfile)}>
           <Input
-            label={"Phone Number"}
+            label={"Número de teléfono"}
             type={"number"}
             name={"phone"}
             register={register}
@@ -95,14 +95,14 @@ function CaptainEditProfile() {
           />
           <div className="flex gap-4 -mb-2">
             <Input
-              label={"First name"}
+              label={"Nombre"}
               name={"firstname"}
               register={register}
               error={errors.firstname}
               defaultValue={captain.fullname.firstname}
             />
             <Input
-              label={"Last name"}
+              label={"Apellido"}
               name={"lastname"}
               register={register}
               error={errors.lastname}
@@ -111,14 +111,14 @@ function CaptainEditProfile() {
           </div>
           <div className="flex gap-4 -my-2">
             <Input
-              label={"Vehicle colour"}
+              label={"Color del vehículo"}
               name={"color"}
               register={register}
               error={errors.color}
               defaultValue={captain.vehicle.color}
             />
             <Input
-              label={"Vehicle capacity"}
+              label={"Capacidad del vehículo"}
               type={"number"}
               name={"capacity"}
               register={register}
@@ -127,16 +127,16 @@ function CaptainEditProfile() {
             />
           </div>
           <Input
-            label={"Vehicle number"}
+            label={"Placa del vehículo"}
             name={"number"}
             register={register}
             error={errors.number}
             defaultValue={captain.vehicle.number}
           />
           <Input
-            label={"Vehicle type"}
+            label={"Tipo de vehículo"}
             type={"select"}
-            options={["Car", "Bike", "Auto"]}
+            options={["Auto", "Moto", "Tuk Tuk"]}
             name={"type"}
             register={register}
             error={errors.type}
@@ -148,7 +148,7 @@ function CaptainEditProfile() {
             </p>
           )}
           <Button
-            title={"Update Profile"}
+            title={"Actualizar perfil"}
             loading={loading}
             type="submit"
             classes={"mt-4"}

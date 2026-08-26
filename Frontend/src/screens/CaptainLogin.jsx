@@ -49,17 +49,17 @@ function CaptainLogin() {
   return (
     <div className="w-full h-dvh flex flex-col justify-between p-4 pt-6">
       <div>
-        <Heading title={"Captain Login🚕"} />
+        <Heading title={"Iniciar sesión conductor 🚕"} />
         <form onSubmit={handleSubmit(loginCaptain)}>
           <Input
-            label={"Email"}
+            label={"Correo"}
             type={"email"}
             name={"email"}
             register={register}
             error={errors.email}
           />
           <Input
-            label={"Password"}
+            label={"Contraseña"}
             type={"password"}
             name={"password"}
             register={register}
@@ -71,14 +71,14 @@ function CaptainLogin() {
             </p>
           )}
           <Link to="/captain/forgot-password" className="text-sm mb-2 inline-block">
-            Forgot Password?
+            ¿Olvidó su contraseña?
           </Link>
-          <Button title={"Login"} loading={loading} type="submit" />
+          <Button title={"Iniciar sesión"} loading={loading} type="submit" />
         </form>
         <p className="text-sm font-normal text-center mt-4">
-          Don't have an account?{" "}
+          ¿Aún no tiene cuenta?{" "}
           <Link to={"/captain/signup"} className="font-semibold">
-            Sign up
+            Registrarse
           </Link>
         </p>
 
@@ -87,14 +87,11 @@ function CaptainLogin() {
         <Button
           type={"link"}
           path={"/login"}
-          title={"Login as User"}
+          title={"Iniciar sesión como usuario"}
           classes={"bg-green-500"}
         />
         <p className="text-xs font-normal text-center self-end mt-6">
-          This site is protected by reCAPTCHA and the Google{" "}
-          <span className="font-semibold underline">Privacy Policy</span> and{" "}
-          <span className="font-semibold underline">Terms of Service</span>{" "}
-          apply.
+          La búsqueda de ubicación utiliza datos de OpenStreetMap y servicios de enrutamiento.
         </p>
       </div>
     </div>

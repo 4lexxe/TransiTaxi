@@ -18,11 +18,7 @@ let emailTemplate = `
       "
     >
       <div style="display: flex; margin-bottom: 30px; gap: 20px">
-        <img
-          src="https://quick-ride-asif.vercel.app/logo-quickride.png"
-          alt="QuickRide"
-          style="margin: 0px auto; height: 60px"
-        />
+        <h1 style="margin: 0px auto; font-size: 28px; color: #16a34a">RayoRemis</h1>
       </div>
 
       <h2 style="margin-top: 0">{{title}}</h2>
@@ -59,7 +55,7 @@ let emailTemplate = `
           text-align: center;
         "
       >
-        &mdash; The QuickRide Team
+        &mdash; The RayoRemis Team
         <br />
         <small>
           If you have any questions or need help, feel free to reach out to our

@@ -5,10 +5,11 @@ import Console from "../utils/console";
 import { ArrowLeft } from "lucide-react";
 import Heading from "./Heading";
 import Button from "./Button";
-import mailImg from "/mail.png";
 import useCooldownTimer from "../hooks/useCooldownTimer";
 import { Alert } from "../components";
 import { useAlert } from "../hooks/useAlert";
+
+const mailImg = "/mail.png";
 
 function VerifyEmail({ user, role }) {
     const navigation = useNavigate();
@@ -29,11 +30,11 @@ function VerifyEmail({ user, role }) {
                 }
             );
             if (response.status === 200) {
-                showAlert('Verification email sent successfully!', 'Please check your inbox and click on the received link to verify your account', 'success');
+                showAlert('Correo de verificación enviado', 'Por favor revisa tu bandeja de entrada y haz clic en el enlace recibido para verificar tu cuenta', 'success');
                 startCooldown();
             }
         } catch (error) {
-            showAlert('Some error occured', error.response.data.message, 'failure');
+            showAlert('Ocurrió un error', error.response.data.message, 'failure');
             Console.error("Error sending verification email:", error);
         } finally {
             setLoading(false);
@@ -42,9 +43,9 @@ function VerifyEmail({ user, role }) {
 
     const getButtonTitle = () => {
         if (isActive) {
-            return `Wait ${timeLeft}s`;
+            return `Espera ${timeLeft}s`;
         }
-        return "Send Verification Email";
+        return "Enviar verificación";
     };
     return (
         <div className="w-full h-dvh flex flex-col text-center p-4 pt-6 gap-24">
@@ -61,25 +62,24 @@ function VerifyEmail({ user, role }) {
                     className="mt-[5px] cursor-pointer"
                     onClick={() => navigation(-1)}
                 />
-                <Heading title={"Go Back"} />
+                <Heading title={"Volver"} />
             </div>
             <div className="px-2">
-                <p className="">Hi{` ${user?.fullname?.firstname}`}</p>
-                <h1 className="text-2xl font-bold">Verify Your Email</h1>
+                <p className="">½Hola{` ${user?.fullname?.firstname}`}!</p>
+                <h1 className="text-2xl font-bold">Verifica tu correo</h1>
 
                 <img src={mailImg} alt="Verify Email" className="h-24 mx-auto mb-4" />
                 <span className="inline-block font-semibold bg-green-200 rounded-lg px-4 py-2 my-3">
                     {user.email}
                 </span>
                 <p className="text-sm mb-6">
-                    Click on the Send Verification Email button to send email verification
-                    link to activate your account.
+                    Haz clic en el botón Enviar verificación para enviar el enlace de verificación de correo para activar tu cuenta.
                 </p>
                 <Button
                     title={getButtonTitle()}
                     classes={"bg-orange-500"}
                     loading={loading}
-                    loadingMessage={"Sending Email..."}
+                    loadingMessage={"Enviando correo..."}
                     fun={sendVerificationEmail}
                     disabled={loading || isActive}
                 />

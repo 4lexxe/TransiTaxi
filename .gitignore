@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+Backend/node_modules/
+Frontend/node_modules/
+
+# Production build outputs
+dist/
+Frontend/dist/
+
+# Environment variables (secret files)
+.env
+Backend/.env
+Frontend/.env
+*.env.local
+
+# Editor & History folders
+.history/
+.vscode/
+.idea/
+*.log
+
+# OS metadata
+.DS_Store
+Thumbs.db

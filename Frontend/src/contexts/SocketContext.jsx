@@ -3,7 +3,11 @@ import { io } from "socket.io-client";
 
 export const SocketDataContext = createContext();
 
-const socket = io(`${import.meta.env.VITE_SERVER_URL}`);
+const socket = io("/", {
+  path: "/socket.io",
+  transports: ["websocket"],
+  withCredentials: true,
+});
 
 import Console from "../utils/console";
 
