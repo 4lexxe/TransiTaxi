@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { SocketDataContext } from "../contexts/SocketContext";
 import Console from "../utils/console";
 import Loading from "./Loading";
+import { BASE_URL } from "../config";
 
 function ChatScreen() {
   const { rideId, userType } = useParams();
@@ -29,7 +30,7 @@ function ChatScreen() {
   const getUserDetails = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/ride/chat-details/${rideId}`
+        `${BASE_URL}/ride/chat-details/${rideId}`
       );
 
       //  Protecting unauthorised users to read the chats

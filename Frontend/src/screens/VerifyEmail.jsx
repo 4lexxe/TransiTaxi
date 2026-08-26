@@ -3,6 +3,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import Console from "../utils/console";
 import { Button, Spinner } from "../components";
+import { BASE_URL } from "../config";
 
 const mailImg = "/mail.png";
 
@@ -19,7 +20,7 @@ const VerifyEmail = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/${userType}/verify-email`,
+        `${BASE_URL}/${userType}/verify-email`,
         { token: emailVerificationToken }
       );
       console.log(response.data)

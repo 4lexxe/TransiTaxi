@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
 import VerifyEmail from "../components/VerifyEmail";
 import Loading from "./Loading";
+import { BASE_URL } from "../config";
 
 function UserProtectedWrapper({ children }) {
   const token = localStorage.getItem("token");
@@ -21,7 +22,7 @@ function UserProtectedWrapper({ children }) {
 
     setLoading(true);
     axios
-      .get(`${import.meta.env.VITE_SERVER_URL}/user/profile`, {
+      .get(`${BASE_URL}/user/profile`, {
         headers: {
           token: token,
         },

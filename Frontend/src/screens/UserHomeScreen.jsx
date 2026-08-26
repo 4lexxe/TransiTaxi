@@ -14,6 +14,7 @@ import debounce from "lodash.debounce";
 import { SocketDataContext } from "../contexts/SocketContext";
 import Console from "../utils/console";
 import { useAlert } from "../hooks/useAlert";
+import { BASE_URL } from "../config";
 
 const map = "/map.png";
 
@@ -98,7 +99,7 @@ function UserHomeScreen() {
   const requestBackendSuggestions = useCallback(
     async (inputValue) => {
       const response = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/map/get-suggestions`,
+        `${BASE_URL}/map/get-suggestions`,
         {
           headers: {
             token,
@@ -223,7 +224,7 @@ function UserHomeScreen() {
 
   const getCoordinatesFromBackend = useCallback(async (address) => {
     const response = await axios.get(
-      `${import.meta.env.VITE_SERVER_URL}/map/get-coordinates?address=${encodeURIComponent(
+      `${BASE_URL}/map/get-coordinates?address=${encodeURIComponent(
         address
       )}`
     );
@@ -356,7 +357,7 @@ function UserHomeScreen() {
 
     axios
       .get(
-        `${import.meta.env.VITE_SERVER_URL}/map/reverse-geocode?lat=${point.lat}&lng=${point.lng}`,
+        `${BASE_URL}/map/reverse-geocode?lat=${point.lat}&lng=${point.lng}`,
         {
           headers: {
             token,
@@ -411,8 +412,7 @@ function UserHomeScreen() {
 
       setLoading(true);
       const response = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL
-        }/ride/get-fare?pickup=${pickupLocation}&destination=${destinationLocation}`,
+        `${BASE_URL}/ride/get-fare?pickup=${pickupLocation}&destination=${destinationLocation}`,
         {
           headers: {
             token: token,
@@ -475,7 +475,7 @@ function UserHomeScreen() {
       }
       
       const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/ride/create`,
+        `${BASE_URL}/ride/create`,
         {
           pickup: pickupLocation,
           destination: destinationLocation,
@@ -537,7 +537,7 @@ function UserHomeScreen() {
 
     try {
       await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/ride/end-ride-user`,
+        `${BASE_URL}/ride/end-ride-user`,
         { rideId: rideDetails._id },
         {
           headers: {
@@ -591,7 +591,7 @@ function UserHomeScreen() {
     try {
       setLoading(true);
       await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/ride/cancel?rideId=${rideDetails._id}`,
+        `${BASE_URL}/ride/cancel?rideId=${rideDetails._id}`,
         {
           headers: {
             token: token,
@@ -677,7 +677,7 @@ function UserHomeScreen() {
 
     axios
       .get(
-        `${import.meta.env.VITE_SERVER_URL}/map/reverse-geocode?lat=${currentLocation.lat}&lng=${currentLocation.lng}`,
+        `${BASE_URL}/map/reverse-geocode?lat=${currentLocation.lat}&lng=${currentLocation.lng}`,
         {
           headers: {
             token,

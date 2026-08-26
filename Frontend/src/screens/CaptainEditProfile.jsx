@@ -6,6 +6,7 @@ import axios from "axios";
 import { useCaptain } from "../contexts/CaptainContext";
 import { ArrowLeft } from "lucide-react";
 import Console from "../utils/console";
+import { BASE_URL } from "../config";
 
 function CaptainEditProfile() {
   const token = localStorage.getItem("token");
@@ -40,7 +41,7 @@ function CaptainEditProfile() {
     try {
       setLoading(true);
       const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/captain/update`,
+        `${BASE_URL}/captain/update`,
         { captainData },
         {
           headers: {

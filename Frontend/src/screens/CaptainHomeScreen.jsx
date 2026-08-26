@@ -7,6 +7,7 @@ import { LiveMap, NewRide, Sidebar } from "../components";
 import Console from "../utils/console";
 import { useAlert } from "../hooks/useAlert";
 import { Alert } from "../components";
+import { BASE_URL } from "../config";
 
 const map = "/map.png";
 
@@ -65,7 +66,7 @@ function CaptainHomeScreen() {
 
   const getCoordinates = async (address) => {
     const response = await axios.get(
-      `${import.meta.env.VITE_SERVER_URL}/map/get-coordinates?address=${encodeURIComponent(
+      `${BASE_URL}/map/get-coordinates?address=${encodeURIComponent(
         address
       )}`
     );
@@ -90,7 +91,7 @@ function CaptainHomeScreen() {
       if (newRide._id != "") {
         setLoading(true);
         const response = await axios.post(
-          `${import.meta.env.VITE_SERVER_URL}/ride/confirm`,
+          `${BASE_URL}/ride/confirm`,
           { rideId: newRide._id },
           {
             headers: {
@@ -121,7 +122,7 @@ function CaptainHomeScreen() {
       if (newRide._id != "" && otp.length == 6) {
         setLoading(true);
         const response = await axios.get(
-          `${import.meta.env.VITE_SERVER_URL}/ride/start-ride?rideId=${newRide._id}&otp=${otp}`,
+          `${BASE_URL}/ride/start-ride?rideId=${newRide._id}&otp=${otp}`,
           {
             headers: {
               token: token,
@@ -148,7 +149,7 @@ function CaptainHomeScreen() {
       if (newRide._id != "") {
         setLoading(true);
         await axios.post(
-          `${import.meta.env.VITE_SERVER_URL}/ride/end-ride`,
+          `${BASE_URL}/ride/end-ride`,
           {
             rideId: newRide._id,
           },

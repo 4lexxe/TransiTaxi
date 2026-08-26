@@ -6,6 +6,7 @@ import Console from '../utils/console';
 import axios from 'axios';
 import { useAlert } from '../hooks/useAlert';
 import { Alert } from '../components';
+import { BASE_URL } from '../config';
 import password_image from '/password.svg'
 
 const allowedParams = ["user", "captain"];
@@ -42,7 +43,7 @@ function ResetPassword() {
         try {
             setLoading(true)
             const response = await axios.post(
-                `${import.meta.env.VITE_SERVER_URL}/${userType}/reset-password`,
+                `${BASE_URL}/${userType}/reset-password`,
                 {
                     token: token,
                     password: data.password

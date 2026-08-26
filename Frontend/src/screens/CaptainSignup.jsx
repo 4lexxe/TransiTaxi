@@ -5,6 +5,7 @@ import { Button, Heading, Input } from "../components";
 import axios from "axios";
 import { ArrowLeft, ChevronRight } from "lucide-react";
 import Console from "../utils/console";
+import { BASE_URL } from "../config";
 
 function CaptainSignup() {
   const [responseError, setResponseError] = useState("");
@@ -40,7 +41,7 @@ function CaptainSignup() {
     try {
       setLoading(true);
       const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/captain/register`,
+        `${BASE_URL}/captain/register`,
         captainData
       );
       Console.log(response);

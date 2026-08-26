@@ -8,6 +8,7 @@ import useCooldownTimer from '../hooks/useCooldownTimer';
 import { ArrowLeft } from 'lucide-react';
 import { useAlert } from '../hooks/useAlert';
 import { Alert } from '../components';
+import { BASE_URL } from '../config';
 
 const mailImg = "/mail.png";
 
@@ -36,7 +37,7 @@ function ForgotPassword() {
             try {
                 setLoading(true);
                 const response = await axios.post(
-                    `${import.meta.env.VITE_SERVER_URL}/mail/${userType}/reset-password`,
+                    `${BASE_URL}/mail/${userType}/reset-password`,
                     data
                 );
                 Console.log(response);

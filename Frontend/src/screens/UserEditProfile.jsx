@@ -8,6 +8,7 @@ import { ArrowLeft } from "lucide-react";
 import Console from "../utils/console";
 import { useAlert } from "../hooks/useAlert";
 import { Alert } from "../components";
+import { BASE_URL } from "../config";
 
 function UserEditProfile() {
   const token = localStorage.getItem("token");
@@ -37,7 +38,7 @@ function UserEditProfile() {
     try {
       setLoading(true);
       const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/user/update`,
+        `${BASE_URL}/user/update`,
         userData,
         {
           headers: {

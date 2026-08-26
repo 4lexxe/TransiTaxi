@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button, Heading, Input } from "../components";
 import axios from "axios";
 import Console from "../utils/console";
+import { BASE_URL } from "../config";
 
 function CaptainLogin() {
   const [responseError, setResponseError] = useState("");
@@ -22,7 +23,7 @@ function CaptainLogin() {
       try {
         setLoading(true)
         const response = await axios.post(
-          `${import.meta.env.VITE_SERVER_URL}/captain/login`,
+          `${BASE_URL}/captain/login`,
           data
         );
         Console.log(response);

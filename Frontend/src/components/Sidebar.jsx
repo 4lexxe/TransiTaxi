@@ -5,6 +5,7 @@ import Button from "./Button";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import Console from "../utils/console";
+import { BASE_URL } from "../config";
 
 function Sidebar() {
   const token = localStorage.getItem("token");
@@ -22,7 +23,7 @@ function Sidebar() {
   const logout = async () => {
     try {
       await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/${newUser.type}/logout`,
+        `${BASE_URL}/${newUser.type}/logout`,
         {
           headers: {
             token: token,

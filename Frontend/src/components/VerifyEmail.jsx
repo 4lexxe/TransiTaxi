@@ -8,6 +8,7 @@ import Button from "./Button";
 import useCooldownTimer from "../hooks/useCooldownTimer";
 import { Alert } from "../components";
 import { useAlert } from "../hooks/useAlert";
+import { BASE_URL } from "../config";
 
 const mailImg = "/mail.png";
 
@@ -22,7 +23,7 @@ function VerifyEmail({ user, role }) {
         try {
             setLoading(true);
             const response = await axios.get(
-                `${import.meta.env.VITE_SERVER_URL}/mail/verify-${role}-email`,
+                `${BASE_URL}/mail/verify-${role}-email`,
                 {
                     headers: {
                         token: token,

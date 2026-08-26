@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button, Heading, Input } from "../components";
 import axios from "axios";
 import Console from "../utils/console";
+import { BASE_URL } from "../config";
 
 function UserSignup() {
   const [responseError, setResponseError] = useState("");
@@ -49,7 +50,7 @@ function UserSignup() {
     try {
       setLoading(true);
       const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/user/register`,
+        `${BASE_URL}/user/register`,
         userData
       );
       Console.log(response);
