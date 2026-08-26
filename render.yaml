@@ -2,7 +2,7 @@ services:
   # Backend Node.js Web Service
   - type: web
     name: quickride-backend
-    env: node
+    runtime: node
     region: oregon
     plan: free
     buildCommand: cd Backend && npm install
@@ -30,9 +30,8 @@ services:
         value: "true"
 
   # Frontend Static Site
-  - type: web
+  - type: static
     name: quickride-frontend
-    env: static
     buildCommand: cd Frontend && npm install && npm run build
     staticPublishPath: ./Frontend/dist
     routes:
