@@ -1,5 +1,7 @@
 require("dotenv").config();
 const socket = require("./socket");
+const path = require("path");
+const fs = require("fs");
 const express = require("express");
 const { createServer } = require("http");
 const app = express();
@@ -39,19 +41,27 @@ if (process.env.ENVIRONMENT == "production") {
   keepServerRunning();
 }
 
-app.get("/", (req, res) => {
-  res.json("Hello, World!");
-});
-
-app.get("/reload", (req, res) => {
-  res.json("Server Reloaded");
-});
-
 app.use("/user", userRoutes);
 app.use("/captain", captainRoutes);
 app.use("/map", mapsRoutes);
 app.use("/ride", rideRoutes);
 app.use("/mail", mailRoutes);
+
+app.get("/reload", (req, res) => {
+  res.json("Server Reloaded");
+});
+
+const frontendDistPath = path.join(__dirname, "../Frontend/dist");
+if (fs.existsSync(frontendDistPath)) {
+  app.use(express.static(frontendDistPath));
+  app.get("*", (req, res, next) => {
+    res.sendFile(path.join(frontendDistPath, "index.html"));
+  });
+} else {
+  app.get("/", (req, res) => {
+    res.json("Hello, World!");
+  });
+}
 
 server.listen(PORT, () => {
   console.log("Server is listening on port", PORT);

@@ -1,0 +1,15 @@
+{
+  "name": "transitaxi",
+  "version": "1.0.0",
+  "description": "TransiTaxi Full Stack Application (Node.js + React)",
+  "main": "Backend/server.js",
+  "scripts": {
+    "build": "cd Frontend && npm install && npm run build && cd ../Backend && npm install",
+    "start": "cd Backend && node server.js",
+    "dev": "cd Backend && npm run dev",
+    "seed": "cd Backend && npm run seed"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

@@ -1,93 +1,53 @@
-# Guía de Despliegue en Render - QuickRide
+# Guía de Despliegue Unificado en Render - TransiTaxi
 
-Esta guía explica paso a paso cómo desplegar la aplicación **QuickRide** en [Render](https://render.com/).
-
----
-
-## 🗄️ 1. Preparar la Base de Datos MongoDB (Atlas)
-
-Render requiere una base de datos hospedada en la nube para el Backend en producción.
-
-1. Crea una cuenta gratuita en [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
-2. Crea un Cluster gratuito (M0).
-3. En la sección **Database Access**, crea un usuario con contraseña.
-4. En **Network Access**, agrega la IP `0.0.0.0/0` (permitir acceso desde cualquier lugar para Render).
-5. En **Database**, haz clic en **Connect** -> **Drivers** y copia la cadena de conexión (`mongodb+srv://...`).
+Esta guía explica cómo desplegar **TransiTaxi** como **un solo servicio completo (Frontend + Backend juntos)** en Render, junto con la base de datos MongoDB Atlas.
 
 ---
 
-## 🚀 2. Opción A: Despliegue Automático con Blueprint (`render.yaml`)
+## 🗄️ 1. Base de Datos MongoDB (Atlas)
 
-QuickRide incluye un archivo `render.yaml` preconfigurado.
+Render **no hospeda MongoDB de forma nativa** (en su plan gratuito solo hospeda PostgreSQL). Por ello, el estándar utilizado en producción es conectar el servicio a **MongoDB Atlas** (servidor gratuito en la nube de MongoDB):
 
-1. Sube tu código a un repositorio de **GitHub** o **GitLab**.
-2. Ingresa a tu panel de [Render Dashboard](https://dashboard.render.com/).
-3. Haz clic en **New +** -> **Blueprint**.
-4. Conecta tu repositorio de QuickRide.
-5. Render detectará el archivo `render.yaml` y creará automáticamente los 2 servicios:
-   - **`quickride-backend`** (Web Service Node.js)
-   - **`quickride-frontend`** (Static Site React)
-6. Completa las variables de entorno cuando Render te lo solicite:
-   - En `quickride-backend`: asigna `MONGODB_PROD_URL` con tu URL de MongoDB Atlas.
-   - En `quickride-frontend`: asigna `VITE_SERVER_URL` con la URL asignada a tu backend (`https://quickride-backend.onrender.com`).
-   - En `quickride-backend`: asigna `CLIENT_URL` con la URL asignada a tu frontend (`https://quickride-frontend.onrender.com`).
-7. Haz clic en **Apply**.
+1. Registrate gratis en [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
+2. Crea un Cluster gratuito **M0**.
+3. En **Database Access**, crea un usuario y contraseña.
+4. En **Network Access**, agrega la IP `0.0.0.0/0` (permitir acceso desde Render).
+5. Haz clic en **Connect** -> **Drivers** y copia tu URI de conexión:
+   `mongodb+srv://usuario:password@cluster.mongodb.net/quickRide?retryWrites=true&w=majority`
 
 ---
 
-## 🛠️ 3. Opción B: Despliegue Manual Servicio por Servicio
+## 🚀 2. Despliegue Unificado en Render (Un solo clic / servicio)
 
-### A. Desplegar Backend (Web Service)
-1. En Render Dashboard, haz clic en **New +** -> **Web Service**.
-2. Conecta tu repositorio.
-3. Configura los parámetros:
-   - **Name**: `quickride-backend`
-   - **Root Directory**: *(dejar vacío)*
-   - **Environment**: `Node`
-   - **Build Command**: `cd Backend && npm install`
-   - **Start Command**: `cd Backend && npm start`
-4. En **Environment Variables**, agrega:
-   - `PORT`: `10000`
-   - `ENVIRONMENT`: `production`
-   - `MONGODB_PROD_URL`: *(Tu URL de MongoDB Atlas)*
-   - `JWT_SECRET`: *(Un secreto aleatorio seguro)*
-   - `CLIENT_URL`: *(La URL de tu frontend en Render)*
-   - `ALLOW_PUBLIC_MAP_PROVIDERS`: `true`
+El proyecto ahora está preparado como una **aplicación monolítica unificada**: el servidor Node.js compila y sirve el Frontend de React y las APIs del Backend en el mismo puerto y la misma URL.
 
-### B. Desplegar Frontend (Static Site)
-1. En Render Dashboard, haz clic en **New +** -> **Static Site**.
-2. Conecta tu repositorio.
-3. Configura los parámetros:
-   - **Name**: `quickride-frontend`
-   - **Build Command**: `cd Frontend && npm install && npm run build`
-   - **Publish Directory**: `Frontend/dist`
-4. En **Redirects / Rewrites**, añade una regla para Single Page Applications (SPA):
-   - **Source**: `/*`
-   - **Destination**: `/index.html`
-   - **Action**: `Rewrite`
+### Pasos en Render:
+
+1. Ve a tu [Render Dashboard](https://dashboard.render.com/).
+2. Haz clic en **New +** -> **Web Service** (o **Blueprint**).
+3. Conecta tu repositorio: **`4lexxe/TransiTaxi`**.
+4. Si creas un **Web Service**:
+   - **Name**: `transitaxi-app`
+   - **Runtime**: `Node` (o `Docker`, ¡ambos funcionan ahora!)
+   - **Build Command**: `npm run build`
+   - **Start Command**: `npm start`
 5. En **Environment Variables**, agrega:
-   - `VITE_SERVER_URL`: `https://tu-backend.onrender.com`
-   - `VITE_ENVIRONMENT`: `production`
-   - `VITE_RIDE_TIMEOUT`: `90000`
+   * **`MONGODB_PROD_URL`**: Tu URI de MongoDB Atlas (`mongodb+srv://...`).
+   * **`ENVIRONMENT`**: `production`
+   * **`JWT_SECRET`**: `un_secreto_seguro_cualquiera`
+6. Haz clic en **Create Web Service**.
 
 ---
 
-## 🔑 4. Cuentas Demo de Prueba
+## 🔑 3. Poblar Base de Datos de Producción con Usuarios Demo
 
-Para demostrar la aplicación una vez desplegada, puedes ejecutar el script de seed para sembrar la base de datos de producción:
+Una vez creado el servicio en Render y conectada tu DB de MongoDB Atlas, ejecuta este comando en tu terminal local para sembrar los usuarios de prueba en la nube:
 
 ```bash
 cd Backend
-MONGODB_PROD_URL="tu_mongodb_atlas_url" ENVIRONMENT=production npm run seed
+MONGODB_PROD_URL="tu_uri_de_mongodb_atlas" ENVIRONMENT=production npm run seed
 ```
 
-### Credenciales creadas:
-
-* 👤 **Pasajero (Rider)**:
-  * **Email**: `usuario@demo.com`
-  * **Contraseña**: `Password123!`
-
-* 🚖 **Conductor (Captain)**:
-  * **Email**: `conductor@demo.com`
-  * **Contraseña**: `Password123!`
-  * **Vehículo**: Auto verde (`ABC-123`)
+### Credenciales Demo Creadas:
+* 👤 **Pasajero**: `usuario@demo.com` / `Password123!`
+* 🚖 **Conductor**: `conductor@demo.com` / `Password123!`

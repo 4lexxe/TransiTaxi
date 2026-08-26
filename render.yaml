@@ -1,12 +1,12 @@
 services:
-  # Backend Node.js Web Service
+  # Full Stack Web Service (Backend Express + React Frontend served on 1 URL)
   - type: web
-    name: quickride-backend
+    name: transitaxi-app
     runtime: node
     region: oregon
     plan: free
-    buildCommand: cd Backend && npm install
-    startCommand: cd Backend && npm start
+    buildCommand: npm run build
+    startCommand: npm start
     envVars:
       - key: PORT
         value: 10000
@@ -16,8 +16,6 @@ services:
         sync: false
       - key: JWT_SECRET
         generateValue: true
-      - key: CLIENT_URL
-        sync: false
       - key: NOMINATIM_BASE_URL
         value: https://nominatim.openstreetmap.org
       - key: OSRM_BASE_URL
@@ -28,20 +26,3 @@ services:
         value: "500"
       - key: ALLOW_PUBLIC_MAP_PROVIDERS
         value: "true"
-
-  # Frontend Static Site
-  - type: static
-    name: quickride-frontend
-    buildCommand: cd Frontend && npm install && npm run build
-    staticPublishPath: ./Frontend/dist
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
-    envVars:
-      - key: VITE_SERVER_URL
-        sync: false
-      - key: VITE_ENVIRONMENT
-        value: production
-      - key: VITE_RIDE_TIMEOUT
-        value: "90000"
