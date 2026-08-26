@@ -9,6 +9,7 @@ Frontend/dist/
 
 # Environment variables (secret files)
 .env
+*.env
 Backend/.env
 Frontend/.env
 *.env.local
